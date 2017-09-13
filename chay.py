@@ -1054,6 +1054,7 @@ def ok2(yyyy):
         try:
             if yyyy % 5 == 0 : 
                 delete_email(driver)
+                os.system('sync && echo 3 > /proc/sys/vm/drop_caches')
         except Exception as e: 
             print str(e)
         ######### ENABLE SETTING #########
@@ -1138,7 +1139,7 @@ def ok2(yyyy):
 
 
 
-for yyyy in range(300):
+for yyyy in range(30000):
     try:
         ok2(yyyy)
     except Exception as e:
