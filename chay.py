@@ -873,7 +873,8 @@ def delete_email(driver):
 
 
 def click_save_yh(driver):
-    for i in range(15):
+    for i in range(65):
+        print i
         try:
             b_save = driver.find_elements_by_xpath("//button[@class=\"left right default btn\"]")
             for bb in b_save : 
@@ -885,6 +886,7 @@ def click_save_yh(driver):
         except Exception as e: 
             print str(e)
             time.sleep(4)
+        time.sleep(4)
     return 0
 
 def remove_email(driver):
@@ -921,18 +923,24 @@ def add_email(driver,n1,n2):
 
 
 def add_email_costum(driver):
-    id = str(uuid.uuid4())[:10].replace('-','')
-    driver.find_element_by_id('options-add-addr').click()
-    driver.find_elements_by_xpath("//input[@name=\"keyword\"]")[0].send_keys(id)
-    __ = click_save_yh(driver)
-    print "Click Save : ",__
-    time.sleep(3)
-    email = 'daipaw_dai_01-'+id+'@yahoo.com'
-    rr = requests.post('https://codenvy.io/api/internal/token/validate?redirect_url=https%3A%2F%2Fcodenvy.io%2F',data = json.dumps({'email':email,'username':str(uuid.uuid4())[:18].replace('-','')}) ,headers=payload)    
-    print rr
-    print rr.text
-    click_save_yh(driver)
-
+    try:
+        id = str(uuid.uuid4())[:10].replace('-','')
+        driver.find_element_by_id('options-add-addr').click()
+        driver.find_elements_by_xpath("//input[@name=\"keyword\"]")[0].send_keys(id)
+        __ = click_save_yh(driver)
+        print "Click Save : ",__
+        time.sleep(3)
+        email = 'daipaw_dai_01-'+id+'@yahoo.com'
+        print 'email : ',email
+        rr = requests.post('https://codenvy.io/api/internal/token/validate?redirect_url=https%3A%2F%2Fcodenvy.io%2F',data = json.dumps({'email':email,'username':str(uuid.uuid4())[:18].replace('-','')}) ,headers=payload)    
+        print rr
+        print rr.text
+        __ = click_save_yh(driver)
+        print "Click Save 2 : ",__
+        return 1
+    except Exception as e: 
+        print "Error in add_email_costum : ",str(e)
+        return 0
 
 def enable_setting(driver):
     try:
@@ -1066,7 +1074,10 @@ def ok2(yyyy):
         ####### ADD EMAIL #########
         print "--- add email ---"
         # add_email(driver,33,35)
-        add_email_costum(driver)
+        addEmailCT = add_email_costum(driver)
+        if not addEmailCT : 
+            driver.quit()
+            return 0
         ####### GET URL #########
         print "--- get url ---"
         time.sleep(10)
