@@ -144,14 +144,7 @@ def get_url_token1(driver):
 ###############################################
 ###############################################
 ###############################################
-###############################################
-driver.get('https://app.getnada.com/inbox/')
-emailraw = driver.find_elements_by_xpath('//h4[@class="fg-black50"]')[0].text
-email= re.sub('\s.*$','',emailraw)
-rr= requests.post('https://codenvy.io/api/internal/token/validate?redirect_url=https%3A%2F%2Fcodenvy.io%2F',data = json.dumps({'email':email,'username':email.split('@')[0]}) ,headers=payload)    
-if rr.status_code > 299 :
-    driver.find_elements_by_xpath('//a[@tabindex="-1"]')[1].click()
-    
+########    
     
     
 ####3 : goto inscription page: 
