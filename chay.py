@@ -884,7 +884,7 @@ def delete_email(driver):
 
 
 def click_save_yh(driver):
-    for i in range(65):
+    for i in range(6):
         print i
         try:
             b_save = driver.find_elements_by_xpath("//button[@class=\"left right default btn\"]")
@@ -896,8 +896,8 @@ def click_save_yh(driver):
                         return 1
         except Exception as e: 
             print str(e)
-            time.sleep(4)
-        time.sleep(4)
+            time.sleep(5)
+        time.sleep(5)
     return 0
 
 def remove_email(driver):
@@ -1029,33 +1029,6 @@ def delete_email(driver):
             driver.find_element_by_id('okModalOverlay').click()
             return 1
     return 0
-
-
-# driver = webdriver.Firefox()
-
-# driver.get('https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com')
-# driver.find_element_by_id('login-username').send_keys('daipaw0001')
-# driver.find_element_by_id('login-signin').click()
-# time.sleep(8)
-# driver.find_element_by_id('login-passwd').send_keys('hoolders01')
-# driver.find_element_by_id('login-signin').click()
-# time.sleep(8)
-######## DETELE EMAIL #########
-# delete_email(driver)
-######## ENABLE SETTING #########
-# enable_setting(driver)
-###### REMOVE EMAIL #########
-# remove_email(driver)
-###### ADD EMAIL #########
-#####add_email(driver,33,35)
-# add_email_costum(driver)
-###### GET URL #########
-# time.sleep(40)
-# get_email_url(driver)
-
-
-# driver.quit()
-
 
 
 
