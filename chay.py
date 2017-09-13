@@ -926,7 +926,8 @@ def add_email_costum(driver):
     click_save_yh(driver)
     time.sleep(3)
     email = 'daipaw_dai_01-'+id+'@yahoo.com'
-    rr= requests.post('https://codenvy.io/api/internal/token/validate?redirect_url=https%3A%2F%2Fcodenvy.io%2F',data = json.dumps({'email':email,'username':str(uuid.uuid4())[:18].replace('-','')}) ,headers=payload)    
+    rr = requests.post('https://codenvy.io/api/internal/token/validate?redirect_url=https%3A%2F%2Fcodenvy.io%2F',data = json.dumps({'email':email,'username':str(uuid.uuid4())[:18].replace('-','')}) ,headers=payload)    
+    print rr
     click_save_yh(driver)
 
 
