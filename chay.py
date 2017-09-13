@@ -882,8 +882,9 @@ def click_save_yh(driver):
                     b_save1 = driver.find_elements_by_xpath("//button[@class=\"left right default btn\"]")
                     if len(b_save1) != len(b_save) : 
                         return 1
-        except: 
-            time.sleep(1)
+        except Exception as e: 
+            print str(e)
+            time.sleep(4)
     return 0
 
 def remove_email(driver):
@@ -923,11 +924,13 @@ def add_email_costum(driver):
     id = str(uuid.uuid4())[:10].replace('-','')
     driver.find_element_by_id('options-add-addr').click()
     driver.find_elements_by_xpath("//input[@name=\"keyword\"]")[0].send_keys(id)
-    click_save_yh(driver)
+    __ = click_save_yh(driver)
+    print "Click Save : ",__
     time.sleep(3)
     email = 'daipaw_dai_01-'+id+'@yahoo.com'
     rr = requests.post('https://codenvy.io/api/internal/token/validate?redirect_url=https%3A%2F%2Fcodenvy.io%2F',data = json.dumps({'email':email,'username':str(uuid.uuid4())[:18].replace('-','')}) ,headers=payload)    
     print rr
+    print rr.text
     click_save_yh(driver)
 
 
