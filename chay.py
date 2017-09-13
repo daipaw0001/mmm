@@ -41,6 +41,17 @@ def getPublicIp():
 
 
 
+def getProxy():
+    for i in range(100000):
+        try:
+            rr = requests.get('https://gimmeproxy.com/api/getProxy',timeout=14 )
+            data = rr.json()
+            return {'http':'http://'+data['ipPort'], 'https':'http://'+data['ipPort']}
+        except:
+            pass
+    return {}
+
+
 
 payload = {
     "Host": "codenvy.io",
@@ -921,6 +932,18 @@ def add_email(driver,n1,n2):
         rr= requests.post('https://codenvy.io/api/internal/token/validate?redirect_url=https%3A%2F%2Fcodenvy.io%2F',data = json.dumps({'email':email,'username':str(uuid.uuid4())[:18].replace('-','')}) ,headers=payload)    
     click_save_yh(driver)
 
+def signup_envy(email):
+    for toiti in range(30):
+        try :
+            proxy = getProxy()
+            if proxy:
+                rr = requests.post('https://codenvy.io/api/internal/token/validate?redirect_url=https%3A%2F%2Fcodenvy.io%2F',data = json.dumps({'email':email,'username':str(uuid.uuid4())[:18].replace('-','')}) ,headers=payload,proxies=proxy)
+            else :
+                rr = requests.post('https://codenvy.io/api/internal/token/validate?redirect_url=https%3A%2F%2Fcodenvy.io%2F',data = json.dumps({'email':email,'username':str(uuid.uuid4())[:18].replace('-','')}) ,headers=payload)
+            return rr
+        except : 
+            pass
+    return 0
 
 def add_email_costum(driver):
     try:
@@ -932,9 +955,7 @@ def add_email_costum(driver):
         time.sleep(3)
         email = 'daipaw_dai_01-'+id+'@yahoo.com'
         print 'email : ',email
-        rr = requests.post('https://codenvy.io/api/internal/token/validate?redirect_url=https%3A%2F%2Fcodenvy.io%2F',data = json.dumps({'email':email,'username':str(uuid.uuid4())[:18].replace('-','')}) ,headers=payload)    
-        print rr
-        print rr.text
+        print signup_envy(email)
         __ = click_save_yh(driver)
         print "Click Save 2 : ",__
         return 1
