@@ -1036,7 +1036,7 @@ def delete_email(driver):
 def ok2(yyyy):
     print '---------- >> ',yyyy,' << -------------'
     try : 
-        driver = webdriver.Firefox()
+        driver = webdriver.Firefox(executable_path='/root/geckodriver')
         driver.get('https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com')
         driver.find_element_by_id('login-username').send_keys('daipaw0001')
         driver.find_element_by_id('login-signin').click()
