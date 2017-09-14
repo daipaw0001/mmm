@@ -57,6 +57,7 @@ def getProxyRaw():
         try:
             rr = requests.get('https://gimmeproxy.com/api/getProxy',timeout=14 )
             data = rr.json()
+            print data
             return data['ip'], data['port']
         except:
             pass
@@ -1064,8 +1065,8 @@ def delete_email(driver):
 def ok2(yyyy):
     print '---------- >> ',yyyy,' << -------------'
     try : 
-        #driver = webdriver.Firefox(executable_path='/root/geckodriver')
-        driver = install_proxy()
+        driver = webdriver.Firefox(executable_path='/root/geckodriver')
+        #driver = install_proxy()
         driver.get('https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com')
         driver.find_element_by_id('login-username').send_keys('daipaw0001')
         driver.find_element_by_id('login-signin').click()
@@ -1116,6 +1117,8 @@ def ok2(yyyy):
         step1 = step2 = step3 = step4 = step41 = step5 = step6 =step7 = 0
         text = sshdoc = ''
         ### 1: setup
+        driver.quit()
+        driver = install_proxy()
         driver.execute_script("window.open('');")
         driver.switch_to_window(driver.window_handles[1])
         driver.switch_to_window(driver.window_handles[0])
