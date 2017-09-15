@@ -1120,7 +1120,7 @@ def ok2(yyyy):
         ######### DETELE EMAIL #########
         print "--- delete ---"
         try:
-            if yyyy % 5 == 0 : 
+            if yyyy % 5 == 0  and yyyy != 0 : 
                 delete_email(driver)
                 os.system('sync && echo 3 > /proc/sys/vm/drop_caches')
         except Exception as e: 
