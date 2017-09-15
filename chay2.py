@@ -1003,15 +1003,19 @@ def signup_envy(email):
     for toiti in range(30):
         try :
             proxyRaw = getIp()
-            proxy = proxyRaw[0] + ":" +proxyRaw[1]
+            oo = proxyRaw[0] + ":" +proxyRaw[1]
+            proxy = {'http':'http://'+oo, 'https':'http://'+oo}
             if proxy:
                 rr = requests.post('https://codenvy.io/api/internal/token/validate?redirect_url=https%3A%2F%2Fcodenvy.io%2F',data = json.dumps({'email':email,'username':str(uuid.uuid4())[:18].replace('-','')}) ,headers=payload,proxies=proxy)
             else :
                 rr = requests.post('https://codenvy.io/api/internal/token/validate?redirect_url=https%3A%2F%2Fcodenvy.io%2F',data = json.dumps({'email':email,'username':str(uuid.uuid4())[:18].replace('-','')}) ,headers=payload)
-            return rr
+            print  'signup_envy : ',rr
+            if rr.status_code < 300 :
+                return rr
         except : 
             pass
     return 0
+
 
 def add_email_costum(driver):
     try:
