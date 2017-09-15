@@ -1133,8 +1133,9 @@ def ok2(yyyy):
                 oksetting = enable_setting(driver)
                 if oksetting : 
                     break
-            except : 
-                pass
+            except Exception as e: 
+                print "setting : ",check_st
+                print str(e)
         if not oksetting:
             return 0
         ####### REMOVE EMAIL #########
