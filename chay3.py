@@ -15,8 +15,7 @@ import time
 
 import random,time
 
-Ips={u'61.91.235.226:8080': 0, u'202.80.240.166:80': 0, u'45.4.34.14:3128': 0, u'61.7.138.10:65103': 0, u'180.183.51.80:8080': 0, u'203.156.126.55:3129': 0, u'110.77.212.60:65103': 0, u'180.183.48.139:8080': 0, u'110.78.178.23:65103': 0, u'182.52.136.74:8080': 1, u'110.77.189.102:65103': 0, u'110.77.160.33:65103': 0, u'14.207.134.39:8080': 0, u'180.183.103.47:8080': 0, u'223.207.95.34:8080': 0, u'110.77.160.192:65103': 0, u'116.58.235.192:65103': 0, u'180.183.94.87:8080': 0, u'14.207.152.34:8080': 0, u'110.78.137.110:65103': 0, u'110.77.177.244:65103': 0, u'183.89.91.115:8080': 0, u'116.58.233.3:65103': 0, u'119.42.121.193:8080': 0}
-
+Ips = {u'45.63.41.114:3128': 0, '45.77.53.95:3128': 0, u'195.110.52.254:80': 0, u'193.17.11.133:8080': 0, u'77.242.24.51:8080': 0, u'188.209.52.161:80': 0, u'51.15.48.59:3128': 0, u'80.12.89.228:3128': 0, u'174.138.33.157:8888': 0, u'217.160.110.150:3128': 0, u'52.201.144.127:3128': 0, '52.56.233.78:3128': 0, u'165.227.66.106:80': 0, u'178.250.45.55:3128': 0, u'212.237.9.127:8888': 0, u'193.17.11.134:8080': 0, u'213.136.79.162:3128': 0, u'45.77.77.130:3128': 0, u'54.197.215.218:8080': 0, u'217.182.76.229:8888': 0, '108.61.175.149:80': 1, u'86.57.240.64:8080': 0, u'67.205.174.218:8080': 0, u'192.241.157.151:8080': 0, u'34.201.226.99:8080': 1, u'163.172.137.115:3128': 0, u'89.40.122.22:8080': 0, u'81.180.121.41:3128': 0, '173.212.247.191:3128': 0, u'138.197.137.90:3128': 0, '46.101.71.208:3128': 0, u'198.98.61.187:3128': 0, u'192.241.157.151:80': 0, u'188.166.82.30:3000': 0, u'67.205.183.113:8080': 0}
 
 import subprocess,os
 
@@ -48,7 +47,7 @@ def getPublicIp():
 def getProxy():
     for i in range(100000):
         try:
-            rr = requests.get('https://gimmeproxy.com/api/getProxy',timeout=14 )
+            rr = requests.get('https://gimmeproxy.com/api/getProxy?minSpeed=50',timeout=14 )
             data = rr.json()
             return {'http':'http://'+data['ipPort'], 'https':'http://'+data['ipPort']}
         except:
@@ -59,7 +58,7 @@ def getProxy():
 def getProxyRaw():
     for i in range(100000):
         try:
-            rr = requests.get('https://gimmeproxy.com/api/getProxy',timeout=14 )
+            rr = requests.get('https://gimmeproxy.com/api/getProxy?minSpeed=50',timeout=14 )
             data = rr.json()
             print data
             return data['ip'], data['port']
@@ -72,19 +71,19 @@ def collect_ip():
         toto = getProxyRaw()
         Ips[toto[0]+':'+toto[1]] = 0
     cpt = 0
-    while len(Ips) < 10  and cpt < 7 :  
+    while len(Ips) < 7  and cpt < 7 :  
         print "Collect Ip"
         oo = random.choice(Ips.keys())
-        for i in range(70):
+        for i in range(45):
             print len(Ips)
             try :
                 proxy = {'http':'http://'+oo, 'https':'http://'+oo}
-                rr1 = requests.get('https://gimmeproxy.com/api/getProxy?country=TH',proxies =proxy)
+                rr1 = requests.get('https://gimmeproxy.com/api/getProxy?minSpeed=50',proxies =proxy)
                 if rr1.json()['supportsHttps']:
                     key = rr1.json()['ipPort']
                     Ips[key] = 0
             except Exception as e:
-                if len(Ips) > 100 :
+                if len(Ips) > 20 :
                     break
                 else :
                     print str(e)
@@ -102,7 +101,8 @@ def getIp():
     ipPort = random.choice(Ips.keys())
     Ips[ipPort] += 1
     return ipPort.split(':')
-    
+
+
 def install_proxy():
         fp = webdriver.FirefoxProfile()
         PROXY_HOST,PROXY_PORT = getIp()
@@ -120,6 +120,7 @@ def install_proxy():
         fp.set_preference("general.useragent.override","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A")
         fp.update_preferences()
         return webdriver.Firefox(firefox_profile=fp,executable_path='/root/geckodriver')
+        # return webdriver.Firefox(firefox_profile=fp ),PROXY_HOST+':'+PROXY_PORT
 
 
 payload = {
@@ -426,7 +427,10 @@ def onpage_1_inscr(driver,url):
         elem_fill_ln.send_keys("fir stsd fName")  
         print "part1 : 3"
         elem_fill_comp = driver.find_element_by_id("employer")
-        elem_fill_comp.send_keys("fir stdsd fName")   
+        elem_fill_comp.send_keys("fir stdsd fName") 
+    except :
+        return 0
+    try:
         print "part1 : 4"
         my_select = Select( driver.find_element_by_id("jobtitle") )
         ok=0
@@ -436,7 +440,7 @@ def onpage_1_inscr(driver,url):
                 my_select.select_by_index(1)
                 ok = 99
             except:
-                time.sleep(2)
+                time.sleep(5)
                 pass
         my_select.select_by_index(1)
         print "part1 : 5"
@@ -448,7 +452,7 @@ def onpage_1_inscr(driver,url):
                 my_select.select_by_index(1)
                 ok = 99
             except:
-                time.sleep(2)
+                time.sleep(5)
                 pass
         my_select.select_by_index(1)    
         print "part1 : 6"
@@ -456,7 +460,7 @@ def onpage_1_inscr(driver,url):
         elem_get_start.click() 
         print "part1 : 7"
     except :
-        return 0
+        return -1
     ######################## WAITING #########################
     # driver.get(driver.current_url + "create-workspace")
     # driver.get("https://codenvy.io/dashboard/#/ide/npojyaoi-01b3/wksp-uq6a")
@@ -465,7 +469,7 @@ def onpage_1_inscr(driver,url):
         print "part1 : 16"
         driver.get("https://codenvy.io/dashboard/#/create-workspace")
     except :
-        return 0
+        return -1
     return 1
 
 def onpage_2_workspace(driver):
@@ -669,6 +673,7 @@ def onpage_4_get_payload(driver,jid,refer,crsf,url2,auth):
 
 
 def get_ssh(driver) :
+    print "[get_ssh] start!"
     try :
         driver.find_elements_by_xpath('//span[@class="GO-AEOVBFU"]')[0].click()
         driver.find_elements_by_xpath('//span[@class="GO-AEOVBHU"]')[0].click()
@@ -679,12 +684,45 @@ def get_ssh(driver) :
                 zzz.click()
     time.sleep(10)
     sshdoc = ''
-    for aa in driver.find_elements_by_tag_name("pre"):
-        if aa.text :
-            sshdoc = aa.text
+    try : 
+        for aa in driver.find_elements_by_tag_name("pre"):
+            if aa.text :
+                sshdoc = aa.text
+    except :
+        pass
+    if sshdoc : 
+        print "OK"
+    else :
+        print "Problem"
+    print "[get_ssh] ends!"
     return sshdoc
     
 
+def get_ssh_redo(driver) :
+    print "[get_ssh] start!"
+    try :
+        driver.find_elements_by_xpath('//span[@class="GO-AEOVBHU"]')[0].click()
+        driver.find_elements_by_xpath('//span[@class="GO-AEOVBFU"]')[0].click()
+    except :
+        zz=driver.find_elements_by_xpath("//*[contains(text(), 'SSH')]")
+        for zzz in zz: 
+            if 'SSH' in zzz.text:
+                zzz.click()
+    time.sleep(10)
+    sshdoc = ''
+    try : 
+        for aa in driver.find_elements_by_tag_name("pre"):
+            if aa.text :
+                sshdoc = aa.text
+    except :
+        pass
+    if sshdoc : 
+        print "OK"
+    else :
+        print "Problem"
+    print "[get_ssh] ends!"
+    return sshdoc
+    
 
 def create_project(driver,pname):
     hong = 0
@@ -752,7 +790,8 @@ def create_pfile(driver,fname):
         print '4 : 18'
         ee5[1].send_keys('ii')
         print '4 : 19' 
-    except :
+    except Exception as e:
+        print "[create_pfile] Debug Mess : ",str(e)
         return 0
     return 1
 
@@ -817,6 +856,7 @@ def get_header(driver):
 
 def update_pw(driver,email):
     try:
+        print "[update_pw] start !"
         driver.switch_to_window(driver.window_handles[1])
         driver.get('https://codenvy.io/dashboard/#/account')
         time.sleep(5)
@@ -825,11 +865,12 @@ def update_pw(driver,email):
         driver.find_elements_by_xpath('//input[@class="ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength ng-valid-maxlength"]')[0].send_keys('hooldes01')
         driver.find_elements_by_xpath('//input[@class="ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-maxlength ng-valid-custom-validator"]')[0].send_keys('hooldes01')
         driver.find_elements_by_xpath('//button[@class="che-button md-accent md-raised md-hue-2 md-button md-chedefault-theme md-ink-ripple"]')[0].click()
-        with open('ok.txt','a') as ff:
-            ff.write('\n'+email+'\n')
+        # with open('ok.txt','a') as ff:
+            # ff.write('\n'+email+'\n')
         driver.switch_to_window(driver.window_handles[0])
-    except Exception as e:
-        print str(e)
+        print "[update_pw] : ends !"
+    except Exception as e: 
+        print "[update_pw] debug mess: ", str(e)
 
 
 #################YAHOO #####################
@@ -953,8 +994,8 @@ def delete_email(driver):
 
 
 def click_save_yh(driver):
-    for i in range(6):
-        print i
+    for i in range(4):
+        print '[click_save_yh] waiting Save button attemp : ',i
         try:
             b_save = driver.find_elements_by_xpath("//button[@class=\"left right default btn\"]")
             for bb in b_save : 
@@ -1038,59 +1079,44 @@ def add_email_costum(driver):
         return 0
 
 def enable_setting(driver):
+    
+    try:
+        driver.find_elements_by_xpath("//*[contains(text(), 'Security')]")[0].click()
+        print "Found Security button"
+        return 1
+    except :
+        pass
     try:
         try:
             try:
                 driver.find_element_by_id('yucs-help_button').click()
                 driver.find_elements_by_xpath("//*[contains(text(), 'Settings')]")[0].click()
-            except :
+            except Exception as e:
+                print 'Debug enable_setting 0: ', str(e)
                 time.sleep(5)
                 driver.find_element_by_id('yucs-help_button').click()
                 driver.find_elements_by_xpath("//*[contains(text(), 'Settings')]")[0].click()
-        except :
+        except Exception as e:
+            print 'Debug enable_setting 1: ', str(e)
             time.sleep(5)
             try:
                 driver.find_element_by_id('yucs-help_button').click()
                 time.sleep(2)
                 driver.find_elements_by_xpath("//*[contains(text(), 'Settings')]")[0].click()
-            except :
+            except Exception as e:
+                print 'Debug enable_setting 2: ', str(e)
                 time.sleep(5)
                 driver.find_element_by_id('yucs-help_button').click()
                 time.sleep(1)
                 driver.find_elements_by_xpath("//*[contains(text(), 'Settings')]")[0].click()
         time.sleep(4)
         driver.find_elements_by_xpath("//*[contains(text(), 'Security')]")[0].click()
-    except : 
+    except Exception as e:
+        print 'Debug enable_setting 3: ', str(e)
         return 0
     return 1
 
-def enable_setting1(driver):
-    try:
-        try:
-            try:
-                driver.find_element_by_id('yucs-help_button').click()
-                driver.find_elements_by_xpath("//*[contains(text(), 'Settings')]")[0].click()
-            except :
-                time.sleep(5)
-                driver.find_element_by_id('yucs-help_button').click()
-                driver.find_elements_by_xpath("//*[contains(text(), 'Settings')]")[0].click()
-        except :
-            time.sleep(5)
-            try:
-                driver.find_element_by_id('yucs-help_button').click()
-                time.sleep(1)
-                driver.find_elements_by_xpath("//*[contains(text(), 'Settings')]")[0].click()
-            except :
-                time.sleep(5)
-                driver.find_element_by_id('yucs-help_button').click()
-                time.sleep(1)
-                driver.find_elements_by_xpath("//*[contains(text(), 'Settings')]")[0].click()
-        time.sleep(4)
-        driver.find_elements_by_xpath("//*[contains(text(), 'Security')]")[0].click()
-    except : 
-        return 0
-    return 1
-
+ 
 
 def delete_email(driver):
     cks = driver.find_elements_by_xpath("//input[@type=\"checkbox\"]")
@@ -1109,8 +1135,8 @@ def delete_email(driver):
 def ok2(yyyy):
     print '---------- >> ',yyyy,' << -------------'
     try : 
-        #driver = webdriver.Firefox(executable_path='/root/geckodriver')
-        driver = install_proxy()
+        driver = webdriver.Firefox()
+        # driver = install_proxy()
         driver.get('https://login.yahoo.com/?.src=ym&.intl=us&.lang=en-US&.done=https%3a//mail.yahoo.com')
         driver.find_element_by_id('login-username').send_keys('daipaw0001')
         driver.find_element_by_id('login-signin').click()
@@ -1163,17 +1189,34 @@ def ok2(yyyy):
         pname='cao'
         step1 = step2 = step3 = step4 = step41 = step5 = step6 =step7 = 0
         text = sshdoc = ''
+        driver.quit()
+        if not url : 
+            return 0
+        #######################################________CODENVY____________#############################################
         ### 1: setup
-        #driver.quit()
-        #driver = install_proxy()
-        driver.execute_script("window.open('');")
-        driver.switch_to_window(driver.window_handles[1])
-        driver.switch_to_window(driver.window_handles[0])
-        ### 2: create acc
-        # url,email=get_url_token1(driver)
-        ### 3: inscription
-        if url:
-            step1 = onpage_1_inscr(driver,url)
+        print "___________Codenvy__________"
+        for totti in range(10):
+            print "Attemp Codenvy : ",totti
+            try :
+                driver, key = install_proxy()
+                driver.execute_script("window.open('');")
+                driver.switch_to_window(driver.window_handles[1])
+                driver.switch_to_window(driver.window_handles[0])
+                ### 2: create acc
+                # url,email=get_url_token1(driver)
+                ### 3: inscription
+                step1 = onpage_1_inscr(driver,url)
+                if step1 == 1 : 
+                    break
+                elif step1 == 0 :
+                    driver.quit()
+                    Ips[key] = 99
+                elif step1 == -1 :
+                    driver.quit()
+                    return 0
+            except :
+                driver.quit()
+                Ips[key] = 99
         ### 4 :  create workspace
         if step1:
             step4 = onpage_2_workspace(driver)
@@ -1181,11 +1224,10 @@ def ok2(yyyy):
             step41 = recheck_onpage_2_workspace(driver)
         ### 5 get ssh
         try:
-            sshdoc = get_ssh(driver)
+            if step1:
+                sshdoc = get_ssh(driver)
         except :
-            pass
-        if sshdoc : 
-            step4 = 1
+            pass 
         ### 6 create project
         if step4 :
             step6 = create_project(driver,pname)
@@ -1202,17 +1244,26 @@ def ok2(yyyy):
         ### 9 create file f5.py
         if text :
             update_pw(driver,email)
-        if not sshdoc :
+        flag_not_sshdoc = 0
+        while flag_not_sshdoc < 10 and step7 and step1:
+            print "-----------redo sshdoc------------"
             sshdoc = get_ssh(driver)
-        if text and step7 and step6: 
+            if sshdoc : 
+                flag_not_sshdoc = 99
+            else :
+                sshdoc = get_ssh_redo(driver)
+                if sshdoc :  flag_not_sshdoc = 99
+            flag_not_sshdoc +=1
+        if text and step7 and step6 and sshdoc: 
             da={'text': text, 'sshdoc': sshdoc, 'email': email}
             zz=requests.post('https://nguyencao.tk/codenvy/',data=da)
         driver.quit()
-    except :
+    except Exception as e:
+        print "Message Debug Fin : ",str(e)
         driver.quit()
 
 
-
+# ok2(0)
 
 for yyyy in range(30000):
     try:
