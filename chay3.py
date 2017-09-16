@@ -119,7 +119,7 @@ def install_proxy():
         fp.set_preference("network.proxy.socks_port",int(PROXY_PORT))   
         fp.set_preference("general.useragent.override","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A")
         fp.update_preferences()
-        return webdriver.Firefox(firefox_profile=fp,executable_path='/root/geckodriver')
+        return webdriver.Firefox(firefox_profile=fp,executable_path='/root/geckodriver'),PROXY_HOST+':'+PROXY_PORT
         # return webdriver.Firefox(firefox_profile=fp ),PROXY_HOST+':'+PROXY_PORT
 
 
@@ -1147,7 +1147,7 @@ def ok2(yyyy):
         ######### DETELE EMAIL #########
         print "--- delete ---"
         try:
-            if yyyy % 5 == 0  and yyyy != 0 : 
+            if yyyy % 5 == 0 : 
                 delete_email(driver)
                 os.system('sync && echo 3 > /proc/sys/vm/drop_caches')
         except Exception as e: 
