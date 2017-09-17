@@ -14,8 +14,8 @@ import time
 
 
 import random,time
-
-Ips = {u'45.63.41.114:3128': 0, '45.77.53.95:3128': 0, u'195.110.52.254:80': 0, u'193.17.11.133:8080': 0, u'77.242.24.51:8080': 0, u'188.209.52.161:80': 0, u'51.15.48.59:3128': 0, u'80.12.89.228:3128': 0, u'174.138.33.157:8888': 0, u'217.160.110.150:3128': 0, u'52.201.144.127:3128': 0, '52.56.233.78:3128': 0, u'165.227.66.106:80': 0, u'178.250.45.55:3128': 0, u'212.237.9.127:8888': 0, u'193.17.11.134:8080': 0, u'213.136.79.162:3128': 0, u'45.77.77.130:3128': 0, u'54.197.215.218:8080': 0, u'217.182.76.229:8888': 0, '108.61.175.149:80': 1, u'86.57.240.64:8080': 0, u'67.205.174.218:8080': 0, u'192.241.157.151:8080': 0, u'34.201.226.99:8080': 1, u'163.172.137.115:3128': 0, u'89.40.122.22:8080': 0, u'81.180.121.41:3128': 0, '173.212.247.191:3128': 0, u'138.197.137.90:3128': 0, '46.101.71.208:3128': 0, u'198.98.61.187:3128': 0, u'192.241.157.151:80': 0, u'188.166.82.30:3000': 0, u'67.205.183.113:8080': 0}
+# https://gimmeproxy.com/api/getProxy?minSpeed=50
+Ips = {}
 
 import subprocess,os
 
@@ -909,12 +909,20 @@ def get_email_url(driver):
         driver.find_element_by_id('Inbox').click()
         print "5555"
 
+def click_inbox(driver):
+    for x in driver.find_elements_by_xpath("//li[@data-fid=\"Inbox\"]"):
+        try :
+            x.click()
+        except :
+            pass
+
 def check_receive_email(driver):
     flag_go = 1
     while flag_go < 30 :
         try :
             mails = driver.find_elements_by_xpath("//span[@title=\"Verify Your Codenvy Account\"]")
             time.sleep(5)
+            click_inbox(driver)
             flag2= 1
             for mail in mails:
                 print "f2222"
@@ -928,6 +936,7 @@ def check_receive_email(driver):
         time.sleep(5)
         flag_go += 1
     return 0
+
 
 def get_email_url_costum(driver):
     flag = 1
@@ -1115,8 +1124,46 @@ def enable_setting(driver):
         print 'Debug enable_setting 3: ', str(e)
         return 0
     return 1
-
  
+
+def spam_to_inbox(driver):
+    # [ x.click() for x in driver.find_elements_by_xpath("//a[@title=\"Spam - 0 emails\"]")]
+    try :
+        driver.find_element_by_id("spam-label").click() 
+    except Exception as e:
+        print "[spam_to_inbox] Deb Mess : ",str(e)
+        return 0
+    time.sleep(5)
+    cks = driver.find_elements_by_xpath("//input[@type=\"checkbox\"]")
+    try:
+        for ck in cks:
+            if 'Select or deselect all messages' in ck.get_attribute('title'):
+                ck.click()
+                time.sleep(5)
+                driver.find_element_by_id("btn-not-spam").click()
+                time.sleep(5)
+                for x in driver.find_elements_by_xpath("//li[@data-fid=\"Inbox\"]"):
+                    try :
+                        x.click()
+                    except :
+                        pass
+                return 1
+    except: 
+        pass
+    for x in driver.find_elements_by_xpath("//li[@data-fid=\"Inbox\"]"):
+        try :
+            x.click()
+        except :
+            pass
+    return 0
+
+def click_inbox(driver):
+    for x in driver.find_elements_by_xpath("//li[@data-fid=\"Inbox\"]"):
+        try :
+            x.click()
+        except :
+            pass
+
 
 def delete_email(driver):
     cks = driver.find_elements_by_xpath("//input[@type=\"checkbox\"]")
@@ -1129,7 +1176,6 @@ def delete_email(driver):
             driver.find_element_by_id('okModalOverlay').click()
             return 1
     return 0
-
 
 
 def ok2(yyyy):
@@ -1244,7 +1290,9 @@ def ok2(yyyy):
         ### 9 create file f5.py
         if text :
             update_pw(driver,email)
+        #### Shh doc redo
         flag_not_sshdoc = 0
+        if sshdoc :  flag_not_sshdoc = 99 
         while flag_not_sshdoc < 10 and step7 and step1:
             print "-----------redo sshdoc------------"
             sshdoc = get_ssh(driver)
