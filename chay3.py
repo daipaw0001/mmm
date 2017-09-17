@@ -17,6 +17,8 @@ import random,time
 # https://gimmeproxy.com/api/getProxy?minSpeed=50
 Ips = {}
 
+
+
 import subprocess,os
 
 USE_PROXY = 0
@@ -60,8 +62,9 @@ def getProxyRaw():
         try:
             rr = requests.get('https://gimmeproxy.com/api/getProxy?minSpeed=50',timeout=14 )
             data = rr.json()
-            print data
-            return data['ip'], data['port']
+            if data['supportsHttps']:
+                print data
+                return data['ip'], data['port']
         except:
             pass
     return '',''
