@@ -946,7 +946,7 @@ def check_receive_email(driver):
         except : 
             pass
         time.sleep(5)
-        if flag_go % 10 == 0:
+        if flag_go % 5 == 0:
             spam_to_inbox(driver)
         flag_go += 1
     return 0
