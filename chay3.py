@@ -928,9 +928,10 @@ def click_inbox(driver):
             pass
 
 def check_receive_email(driver):
-    flag_go = 1
+    flag_go = 0
     while flag_go < 30 :
         try :
+            print "[check_receive_email] : ",flag_go
             mails = driver.find_elements_by_xpath("//span[@title=\"Verify Your Codenvy Account\"]")
             time.sleep(5)
             click_inbox(driver)
@@ -945,7 +946,8 @@ def check_receive_email(driver):
         except : 
             pass
         time.sleep(5)
-        spam_to_inbox(driver)
+        if flag_go % 10 == 0:
+            spam_to_inbox(driver)
         flag_go += 1
     return 0
 
