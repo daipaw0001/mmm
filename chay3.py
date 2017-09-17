@@ -1302,8 +1302,8 @@ def ok2(yyyy):
             text = get_header(driver)
             print 'End of headers; length(text)=',str(len(text))
         ### 9 create file f5.py
-        if text :
-            update_pw(driver,email)
+        # if text :
+            # update_pw(driver,email)
         #### Shh doc redo
         flag_not_sshdoc = 0
         if sshdoc :  flag_not_sshdoc = 99 
