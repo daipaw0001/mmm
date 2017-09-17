@@ -63,6 +63,11 @@ def getProxyRaw():
             rr = requests.get('https://gimmeproxy.com/api/getProxy?minSpeed=50',timeout=14 )
             data = rr.json()
             if data['supportsHttps']:
+                oo = data['ipPort']
+                proxy = {'http':'http://'+oo, 'https':'http://'+oo}
+                rr1 = requests.get('https://gimmeproxy.com/api/getProxy?minSpeed=50',proxies =proxy)
+                if rr1.json()['supportsHttps']:
+                    key = rr1.json()['ipPort']
                 print data
                 return data['ip'], data['port']
         except:
@@ -939,7 +944,7 @@ def check_receive_email(driver):
         except : 
             pass
         time.sleep(5)
-        spam_to_inbox()
+        spam_to_inbox())
         flag_go += 1
     return 0
 
