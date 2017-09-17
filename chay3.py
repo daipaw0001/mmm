@@ -106,6 +106,8 @@ def getIp():
     return ipPort.split(':')
 
 
+getIp()
+    
 def install_proxy():
         fp = webdriver.FirefoxProfile()
         PROXY_HOST,PROXY_PORT = getIp()
