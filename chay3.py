@@ -65,22 +65,23 @@ def getProxyRaw():
             if data['supportsHttps']:
                 oo = data['ipPort']
                 proxy = {'http':'http://'+oo, 'https':'http://'+oo}
-                rr1 = requests.get('https://gimmeproxy.com/api/getProxy?minSpeed=50',proxies =proxy)
-                if rr1.json()['supportsHttps']:
-                    key = rr1.json()['ipPort']
+                for __ in range (3):
+                    rr1 = requests.get('https://gimmeproxy.com/api/getProxy?minSpeed=50',proxies =proxy)
+                    if rr1.json()['supportsHttps']:
+                        key = rr1.json()['ipPort']
                 print data
                 return data['ip'], data['port']
         except:
             pass
     return '',''
 
-def collect_ip():
-    if len(Ips) == 0:
-        toto = getProxyRaw()
-        Ips[toto[0]+':'+toto[1]] = 0
+def collect_ip(): 
     cpt = 0
     while len(Ips) < 7  and cpt < 7 :  
         print "Collect Ip"
+        if len(Ips) < 2:
+            toto = getProxyRaw()
+            Ips[toto[0]+':'+toto[1]] = 0 
         oo = random.choice(Ips.keys())
         for i in range(45):
             print len(Ips)
